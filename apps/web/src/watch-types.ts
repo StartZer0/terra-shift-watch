@@ -1,0 +1,16 @@
+import type {Settings,Theme} from './types';
+export const featureNames:Record<Theme,string>={water:'Water',vegetation:'Greening',forest:'Forests',ground:'Ground',coast:'Coasts'};
+export type WatchConfig={label:string;latitude:number;longitude:number;side_km:number;aoi_polygon:number[][]|null;features:Theme[];interval_hours:number;enabled:boolean;use_muse:boolean;auto_satellite?:boolean};
+export type SeriesPoint={date:string;value:number};
+export type WatchCard={feature:Theme;title:string;level:number;level_label:string;summary:string;evidence_ids:string[];series:SeriesPoint[];unit:string;recommendation:string;limitations:string[]};
+export type Evidence={value:number;unit:string;source:string;detail:string};
+export type Source={id:string;state:string;fetched_at:string;url:string;reason?:string;grid_distance_km?:number;granules?:Array<{id:string;date:string}>};
+export type Satellite={state:string;checked_at?:string;observed_at?:string;bounds?:number[];resolution_m?:number;notes?:string[];water?:{state:string;reason?:string;date?:string;coverage_pct?:number};vegetation?:{state:string;reason?:string;date?:string;coverage_pct?:number};ground?:{state:string;reason?:string;date?:string;coverage_pct?:number};sam?:Array<{index:number;concept:string;state:string;date:string;image?:string;area_ha?:number;objects:number;reason?:string}>;optical_observations?:Array<{index:number;image:string;date:string}>;sam_note?:string};
+export type Snapshot={created_at:string;level:number;level_label:string;forecast_start:string;cards:WatchCard[];evidence:Record<string,Evidence>;sources:Source[];coverage:{assessed_features:number;requested_features:number;scope:string};escalated?:boolean;brief?:{summary?:string;evidence_ids?:string[];next_steps?:string[];reason?:string;trace?:{model:string;request_id:string}}};
+export type WatchArea={id:string;config:WatchConfig;state:string;error:string|null;created:number;next_due:number;latest:Snapshot|null;satellite:Satellite|null;direct?:Record<string,{state:string;note?:string;reason?:string;run_date?:string;control_discharge_m3s?:number[]}>};
+export type Overview={areas:WatchArea[];providers:Array<{id:string;name:string;configured:boolean;detail:string}>;scheduler:string;max_areas:number;satellite_busy:string|null;checking:string[]};
+export const defaultWatch:WatchConfig={label:'Lake Oroville, California',latitude:39.60,longitude:-121.43,side_km:20,aoi_polygon:null,features:['water','vegetation','forest','ground','coast'],interval_hours:6,enabled:true,use_muse:false,auto_satellite:true};
+export function settingsFor(area:WatchConfig):Settings{return {...area,source:'sentinel2',mode:'history',from_year:2025,to_year:2026,start_month:6,end_month:8,before_date:'2025-06-01',after_date:'2026-06-01',window_days:10,resolution:60,max_scenes:1,theme:area.features[0],themes:area.features,use_sam:true,use_reasoning:true,use_weather:true}}
+export const num=(value:number,digits=1)=>(Math.abs(value)<.5*10**-digits?0:value).toLocaleString(undefined,{maximumFractionDigits:digits});
+export const timeLabel=(value:string|number)=>new Date(typeof value==='number'?value*1000:value).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+export const staleReport=(report:Snapshot|null)=>!!report&&Date.now()-Date.parse(report.created_at)>18*3600*1000;

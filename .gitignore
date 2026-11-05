@@ -1,0 +1,21 @@
+.env
+.env.*
+!.env.example
+!local.env.example
+artifacts/
+.runtime/
+node_modules/
+.venv/
+__pycache__/
+
+dist/
+output/
+.playwright-cli/
+*.tsbuildinfo
+.DS_Store
+.pytest_cache/
+*.pem
+*.key
+# Local submission drafts and personal survey guidance.
+docs/terra-shift/13-submission-pack.md
+docs/terra-shift/15-form-answers.md

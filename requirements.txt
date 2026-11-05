@@ -1,0 +1,19 @@
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+pydantic>=2.9,<3
+python-dotenv>=1,<2
+httpx>=0.27,<1
+numpy>=2,<3
+rasterio>=1.4,<2
+pyproj>=3.7,<4
+shapely>=2,<3
+Pillow>=11,<13
+planetary-computer>=1,<2
+meta-sam-parser>=0.1
+psutil>=6,<8
+pytest>=8,<10
+
+# Optional authenticated Watch data cross-checks
+cdsapi>=0.7.7,<1
+copernicusmarine>=2.5,<3
+h5netcdf>=1.8,<2
